@@ -4,16 +4,64 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
+	"time"
 )
 
 func main() {
 	c := new(http.Client)
 	c.CheckRedirect = func(req *http.Request, via []*http.Request) error { return errors.New("not redirect") }
 
-	for i := 0; i < 1000; i++ {
-		res, _ := c.Get(fmt.Sprintf("http://git.io/%d", i))
-		if res.StatusCode == 404 {
-			fmt.Println(i)
+	runes := []rune{'0'}
+	lastKey := 0
+
+	for {
+		var uri string
+		for _, v := range runes {
+			uri += string(v)
 		}
+
+		res, _ := c.Get("http://git.io/" + uri)
+		if res.StatusCode == 404 {
+			fmt.Println(uri + " OK!")
+		} else {
+			fmt.Fprintln(os.Stderr, uri+" NG")
+		}
+
+		if runes[lastKey] == 'Z' {
+			// carry over
+			addFlg := true
+			for i := lastKey; i > -1; i-- {
+				beforeRune := runes[i]
+				runes[i] = getNextRune(runes[i])
+				if beforeRune != 'Z' {
+					addFlg = false
+					break
+				}
+			}
+
+			if addFlg {
+				runes = append(runes, '0')
+				lastKey++
+			}
+		} else {
+			runes[lastKey] = getNextRune(runes[lastKey])
+		}
+
+		time.Sleep(3 * time.Second)
 	}
+}
+
+func getNextRune(r rune) rune {
+	// 0 -> 9, a -> z, A -> Z
+	if r == '9' {
+		return 'a'
+	} else if r == 'z' {
+		return 'A'
+	} else if r == 'Z' {
+		return '0'
+	}
+
+	r++
+	return r
 }
