@@ -21,11 +21,16 @@ func main() {
 			uri += string(v)
 		}
 
-		res, _ := c.Get("http://git.io/" + uri)
-		if res.StatusCode == 404 {
+		resp, err := c.Get("http://git.io/" + uri)
+		if err == nil {
+			resp.Body.Close()
+		}
+
+		if resp.StatusCode == 404 {
 			fmt.Println(uri + " OK!")
 		} else {
 			fmt.Fprintln(os.Stderr, uri+" NG")
+			fmt.Fprintln(os.Stderr, "Location:", resp.Header.Get("Location"))
 		}
 
 		if runes[lastKey] == 'Z' {
