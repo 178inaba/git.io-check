@@ -13,7 +13,6 @@ func main() {
 	c.CheckRedirect = func(req *http.Request, via []*http.Request) error { return errors.New("not redirect") }
 
 	runes := []rune{'0'}
-	lastKey := 0
 
 	for {
 		var uri string
@@ -33,10 +32,10 @@ func main() {
 			fmt.Fprintln(os.Stderr, "Location:", resp.Header.Get("Location"))
 		}
 
-		if runes[lastKey] == 'Z' {
+		if runes[len(runes)-1] == 'Z' {
 			// carry over
 			addFlg := true
-			for i := lastKey; i > -1; i-- {
+			for i := len(runes) - 1; i > -1; i-- {
 				beforeRune := runes[i]
 				runes[i] = getNextRune(runes[i])
 				if beforeRune != 'Z' {
@@ -47,10 +46,9 @@ func main() {
 
 			if addFlg {
 				runes = append(runes, '0')
-				lastKey++
 			}
 		} else {
-			runes[lastKey] = getNextRune(runes[lastKey])
+			runes[len(runes)-1] = getNextRune(runes[len(runes)-1])
 		}
 
 		time.Sleep(3 * time.Second)
