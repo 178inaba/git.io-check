@@ -8,6 +8,11 @@ import (
 	"time"
 )
 
+const (
+	waitTime  = 3 * time.Second
+	execDigit = 5
+)
+
 func main() {
 	c := new(http.Client)
 	c.CheckRedirect = func(req *http.Request, via []*http.Request) error { return errors.New("not redirect") }
@@ -51,7 +56,12 @@ func main() {
 			runes[len(runes)-1] = getNextRune(runes[len(runes)-1])
 		}
 
-		time.Sleep(3 * time.Second)
+		if len(runes) > execDigit {
+			// exit
+			break
+		}
+
+		time.Sleep(waitTime)
 	}
 }
 
