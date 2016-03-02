@@ -25,7 +25,7 @@ func main() {
 			uri += string(v)
 		}
 
-		resp, err := c.Get("http://git.io/" + uri)
+		resp, err := c.Get("https://git.io/" + uri)
 		if err == nil {
 			resp.Body.Close()
 		}
