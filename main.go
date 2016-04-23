@@ -11,6 +11,10 @@ import (
 const (
 	waitTime  = 3 * time.Second
 	execDigit = 5
+	baseURL   = "https://git.io/"
+	okFmt     = "%s OK!\n"
+	ngFmt     = "%s NG!\n"
+	locFmt    = "Location: %s\n"
 )
 
 func main() {
@@ -25,16 +29,16 @@ func main() {
 			uri += string(v)
 		}
 
-		resp, err := c.Get("https://git.io/" + uri)
+		resp, err := c.Get(baseURL + uri)
 		if err == nil {
 			resp.Body.Close()
 		}
 
 		if resp.StatusCode == 404 {
-			fmt.Println(uri + " OK!")
+			fmt.Printf(okFmt, uri)
 		} else {
-			fmt.Fprintln(os.Stderr, uri+" NG")
-			fmt.Fprintln(os.Stderr, "Location:", resp.Header.Get("Location"))
+			fmt.Fprintf(os.Stderr, ngFmt, uri)
+			fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
 		}
 
 		if runes[len(runes)-1] == 'Z' {
