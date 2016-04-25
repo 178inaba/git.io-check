@@ -41,24 +41,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
 		}
 
-		if runes[len(runes)-1] == 'Z' {
-			// carry over
-			addFlg := true
-			for i := len(runes) - 1; i > -1; i-- {
-				beforeRune := runes[i]
-				runes[i] = getNextRune(runes[i])
-				if beforeRune != 'Z' {
-					addFlg = false
-					break
-				}
-			}
-
-			if addFlg {
-				runes = append(runes, '0')
-			}
-		} else {
-			runes[len(runes)-1] = getNextRune(runes[len(runes)-1])
-		}
+		runes = advanceRunes(runes)
 
 		if len(runes) > execDigit {
 			// exit
@@ -67,6 +50,29 @@ func main() {
 
 		time.Sleep(waitTime)
 	}
+}
+
+func advanceRunes(runes []rune) []rune {
+	if runes[len(runes)-1] == 'Z' {
+		// carry over
+		addFlg := true
+		for i := len(runes) - 1; i > -1; i-- {
+			beforeRune := runes[i]
+			runes[i] = getNextRune(runes[i])
+			if beforeRune != 'Z' {
+				addFlg = false
+				break
+			}
+		}
+
+		if addFlg {
+			runes = append(runes, '0')
+		}
+	} else {
+		runes[len(runes)-1] = getNextRune(runes[len(runes)-1])
+	}
+
+	return runes
 }
 
 func getNextRune(r rune) rune {
