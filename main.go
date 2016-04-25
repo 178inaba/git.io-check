@@ -24,10 +24,7 @@ func main() {
 	runes := []rune{'0'}
 
 	for {
-		var uri string
-		for _, v := range runes {
-			uri += string(v)
-		}
+		uri := string(runes)
 
 		resp, err := c.Get(baseURL + uri)
 		if err == nil {
