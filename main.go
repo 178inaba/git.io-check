@@ -17,26 +17,21 @@ const (
 	locFmt    = "Location: %s\n"
 )
 
-func main() {
-	c := new(http.Client)
-	c.CheckRedirect = func(req *http.Request, via []*http.Request) error { return errors.New("not redirect") }
+var (
+	c = new(http.Client)
+)
 
+func init() {
+	c.CheckRedirect = func(req *http.Request, via []*http.Request) error { return errors.New("not redirect") }
+}
+
+func main() {
 	runes := []rune{'0'}
 
 	for {
 		uri := string(runes)
 
-		resp, err := c.Get(baseURL + uri)
-		if err == nil {
-			resp.Body.Close()
-		}
-
-		if resp.StatusCode == 404 {
-			fmt.Printf(okFmt, uri)
-		} else {
-			fmt.Fprintf(os.Stderr, ngFmt, uri)
-			fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
-		}
+		checkURI(uri)
 
 		runes = advanceRunes(runes)
 
@@ -46,6 +41,20 @@ func main() {
 		}
 
 		time.Sleep(waitTime)
+	}
+}
+
+func checkURI(uri string) {
+	resp, err := c.Get(baseURL + uri)
+	if err == nil {
+		resp.Body.Close()
+	}
+
+	if resp.StatusCode == 404 {
+		fmt.Printf(okFmt, uri)
+	} else {
+		fmt.Fprintf(os.Stderr, ngFmt, uri)
+		fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
 	}
 }
 
