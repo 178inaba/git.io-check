@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 const (
@@ -18,10 +20,12 @@ const (
 )
 
 var (
+	n = kingpin.Flag("dry-run", "dry run mode.").Short('n').Bool()
 	c = new(http.Client)
 )
 
 func init() {
+	kingpin.Parse()
 	c.CheckRedirect = func(req *http.Request, via []*http.Request) error { return errors.New("not redirect") }
 }
 
@@ -45,16 +49,20 @@ func main() {
 }
 
 func checkURI(uri string) {
-	resp, err := c.Get(baseURL + uri)
-	if err == nil {
-		resp.Body.Close()
-	}
-
-	if resp.StatusCode == 404 {
+	if *n {
 		fmt.Printf(okFmt, uri)
 	} else {
-		fmt.Fprintf(os.Stderr, ngFmt, uri)
-		fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
+		resp, err := c.Get(baseURL + uri)
+		if err == nil {
+			resp.Body.Close()
+		}
+
+		if resp.StatusCode == 404 {
+			fmt.Printf(okFmt, uri)
+		} else {
+			fmt.Fprintf(os.Stderr, ngFmt, uri)
+			fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
+		}
 	}
 }
 
