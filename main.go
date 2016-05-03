@@ -50,6 +50,7 @@ func main() {
 
 func checkPath(path string) {
 	if *n {
+		// dry run
 		okLog(path)
 		return
 	}
