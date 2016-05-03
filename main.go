@@ -51,18 +51,19 @@ func main() {
 func checkURI(uri string) {
 	if *n {
 		fmt.Printf(okFmt, uri)
-	} else {
-		resp, err := c.Get(baseURL + uri)
-		if err == nil {
-			resp.Body.Close()
-		}
+		return
+	}
 
-		if resp.StatusCode == 404 {
-			fmt.Printf(okFmt, uri)
-		} else {
-			fmt.Fprintf(os.Stderr, ngFmt, uri)
-			fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
-		}
+	resp, err := c.Get(baseURL + uri)
+	if err == nil {
+		resp.Body.Close()
+	}
+
+	if resp.StatusCode == 404 {
+		fmt.Printf(okFmt, uri)
+	} else {
+		fmt.Fprintf(os.Stderr, ngFmt, uri)
+		fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
 	}
 }
 
