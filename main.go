@@ -62,8 +62,7 @@ func checkPath(path string) {
 	if resp.StatusCode == 404 {
 		okLog(path)
 	} else {
-		fmt.Fprintf(os.Stderr, ngFmt, path)
-		fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
+		ngLog(path, resp.Header.Get("Location"))
 	}
 }
 
@@ -106,4 +105,9 @@ func getNextRune(r rune) rune {
 
 func okLog(path string) {
 	log.WithFields(log.Fields{"path": path}).Info("ok!")
+}
+
+func ngLog(path string, location string) {
+	fmt.Fprintf(os.Stderr, ngFmt, path)
+	fmt.Fprintf(os.Stderr, locFmt, location)
 }
