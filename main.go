@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"gopkg.in/alecthomas/kingpin.v2"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 const (
@@ -48,7 +50,7 @@ func main() {
 
 func checkPath(path string) {
 	if *n {
-		fmt.Printf(okFmt, path)
+		okLog(path)
 		return
 	}
 
@@ -58,7 +60,7 @@ func checkPath(path string) {
 	}
 
 	if resp.StatusCode == 404 {
-		fmt.Printf(okFmt, path)
+		okLog(path)
 	} else {
 		fmt.Fprintf(os.Stderr, ngFmt, path)
 		fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
@@ -100,4 +102,8 @@ func getNextRune(r rune) rune {
 
 	r++
 	return r
+}
+
+func okLog(path string) {
+	log.WithFields(log.Fields{"path": path}).Info("ok!")
 }
