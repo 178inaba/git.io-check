@@ -13,7 +13,7 @@ import (
 const (
 	waitTime  = 3 * time.Second
 	execDigit = 5
-	baseURL   = "https://git.io/"
+	baseURL   = "https://git.io"
 	okFmt     = "%s OK!\n"
 	ngFmt     = "%s NG!\n"
 	locFmt    = "Location: %s\n"
@@ -33,9 +33,7 @@ func main() {
 	runes := []rune{'0'}
 
 	for {
-		uri := string(runes)
-
-		checkURI(uri)
+		checkPath("/" + string(runes))
 
 		runes = advanceRunes(runes)
 
@@ -48,21 +46,21 @@ func main() {
 	}
 }
 
-func checkURI(uri string) {
+func checkPath(path string) {
 	if *n {
-		fmt.Printf(okFmt, uri)
+		fmt.Printf(okFmt, path)
 		return
 	}
 
-	resp, err := c.Get(baseURL + uri)
+	resp, err := c.Get(baseURL + path)
 	if err == nil {
 		resp.Body.Close()
 	}
 
 	if resp.StatusCode == 404 {
-		fmt.Printf(okFmt, uri)
+		fmt.Printf(okFmt, path)
 	} else {
-		fmt.Fprintf(os.Stderr, ngFmt, uri)
+		fmt.Fprintf(os.Stderr, ngFmt, path)
 		fmt.Fprintf(os.Stderr, locFmt, resp.Header.Get("Location"))
 	}
 }
