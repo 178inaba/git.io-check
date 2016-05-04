@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"math/rand"
 	"net/http"
 	"time"
 
@@ -45,8 +46,7 @@ func main() {
 
 func checkPath(path string) {
 	if *n {
-		// dry run
-		okLog(path)
+		dryRun(path)
 		return
 	}
 
@@ -105,4 +105,12 @@ func okLog(path string) {
 
 func ngLog(path string, location string) {
 	log.WithFields(log.Fields{"path": path, "location": location}).Error("ng.")
+}
+
+func dryRun(path string) {
+	if rand.Intn(2) == 1 {
+		okLog(path)
+	} else {
+		ngLog(path, "https://example.com/")
+	}
 }
