@@ -2,9 +2,7 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
-	"os"
 	"time"
 
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -16,9 +14,6 @@ const (
 	waitTime  = 3 * time.Second
 	execDigit = 5
 	baseURL   = "https://git.io"
-	okFmt     = "%s OK!\n"
-	ngFmt     = "%s NG!\n"
-	locFmt    = "Location: %s\n"
 )
 
 var (
@@ -109,6 +104,5 @@ func okLog(path string) {
 }
 
 func ngLog(path string, location string) {
-	fmt.Fprintf(os.Stderr, ngFmt, path)
-	fmt.Fprintf(os.Stderr, locFmt, location)
+	log.WithFields(log.Fields{"path": path, "location": location}).Error("ng.")
 }
