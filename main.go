@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	waitTime  = 3 * time.Second
+	interval  = 3 * time.Second
 	execDigit = 5
 	baseURL   = "https://git.io"
 )
@@ -40,7 +40,7 @@ func main() {
 			break
 		}
 
-		time.Sleep(waitTime)
+		time.Sleep(interval)
 	}
 }
 
