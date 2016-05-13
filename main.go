@@ -12,14 +12,14 @@ import (
 )
 
 const (
-	interval  = 3 * time.Second
 	execDigit = 5
 	baseURL   = "https://git.io"
 )
 
 var (
-	n = kingpin.Flag("dry-run", "dry run mode.").Short('n').Bool()
-	c = new(http.Client)
+	interval = kingpin.Flag("interval", "interval time.").Default((3 * time.Second).String()).Duration()
+	n        = kingpin.Flag("dry-run", "dry run mode.").Short('n').Bool()
+	c        = new(http.Client)
 )
 
 func init() {
@@ -40,7 +40,7 @@ func main() {
 			break
 		}
 
-		time.Sleep(interval)
+		time.Sleep(*interval)
 	}
 }
 
