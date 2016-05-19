@@ -24,11 +24,11 @@ var (
 
 func init() {
 	kingpin.CommandLine.HelpFlag.Short('h')
-	kingpin.Parse()
 	c.CheckRedirect = func(req *http.Request, via []*http.Request) error { return errors.New("not redirect") }
 }
 
 func main() {
+	kingpin.Parse()
 	runes := []rune{'0'}
 
 	for {
