@@ -17,7 +17,7 @@ const (
 )
 
 var (
-	interval = kingpin.Flag("interval", "interval time.").Default((3 * time.Second).String()).Duration()
+	interval = kingpin.Flag("interval", "interval time. (e.g. 100ms, 1s)").Default((3 * time.Second).String()).Duration()
 	n        = kingpin.Flag("dry-run", "dry run mode.").Short('n').Bool()
 	c        = new(http.Client)
 )
