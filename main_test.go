@@ -33,24 +33,24 @@ func TestAdvanceRunes(t *testing.T) {
 	got = advanceRunes([]rune{'Z'})
 	want = []rune{'0', '0'}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("error: got rune %s, want %s.", string(got), string(want))
+		t.Errorf("error: got runes %s, want %s.", string(got), string(want))
 	}
 
 	got = advanceRunes([]rune{'0', '0'})
 	want = []rune{'0', '1'}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("error: got rune %s, want %s.", string(got), string(want))
+		t.Errorf("error: got runes %s, want %s.", string(got), string(want))
 	}
 
 	got = advanceRunes([]rune{'9', '9'})
 	want = []rune{'9', 'a'}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("error: got rune %s, want %s.", string(got), string(want))
+		t.Errorf("error: got runes %s, want %s.", string(got), string(want))
 	}
 
 	got = advanceRunes([]rune{'Z', 'Z'})
 	want = []rune{'0', '0', '0'}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("error: got rune %s, want %s.", string(got), string(want))
+		t.Errorf("error: got runes %s, want %s.", string(got), string(want))
 	}
 }
